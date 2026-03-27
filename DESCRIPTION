@@ -1,0 +1,16 @@
+Package: Ube2j2
+Type: Package
+Title: Ube2j2 analysis
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Matthew", "Zinkgraf",
+      email = "zinkgrm@wwu.edu",
+      role = c("aut", "cre")
+    )
+  )
+Description: Analysis of ER stress-induced changes in protein abundance associated with Ube2j2 deficiency in cell culture
+License: GPL (>=3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2

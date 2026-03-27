@@ -1,0 +1,33 @@
+group,sample,genotype,drug,time,label,condition,replicate
+C6 18hrs,S25,C6,no,18,S25,C6 18hrs,1
+C6 18hrs,S26,C6,no,18,S26,C6 18hrs,2
+C6 18hrs,S27,C6,no,18,S27,C6 18hrs,3
+C6 18hrs,S28,C6,no,18,S28,C6 18hrs,4
+C6 6hrs,S10,C6,no,6,S10,C6 6hrs,1
+C6 6hrs,S11,C6,no,6,S11,C6 6hrs,2
+C6 6hrs,S12,C6,no,6,S12,C6 6hrs,3
+C6 6hrs,S9,C6,no,6,S9,C6 6hrs,4
+C6 Tu 18hrs,S29,C6,Tu,18,S29,C6 Tu 18hrs,1
+C6 Tu 18hrs,S30,C6,Tu,18,S30,C6 Tu 18hrs,2
+C6 Tu 18hrs,S31,C6,Tu,18,S31,C6 Tu 18hrs,3
+C6 Tu 18hrs,S32,C6,Tu,18,S32,C6 Tu 18hrs,4
+C6 Tu 6hrs,S13,C6,Tu,6,S13,C6 Tu 6hrs,1
+C6 Tu 6hrs,S14,C6,Tu,6,S14,C6 Tu 6hrs,2
+C6 Tu 6hrs,S15,C6,Tu,6,S15,C6 Tu 6hrs,3
+C6 Tu 6hrs,S16,C6,Tu,6,S16,C6 Tu 6hrs,4
+WT 18hrs,S17,WT,no,18,S17,WT 18hrs,1
+WT 18hrs,S18,WT,no,18,S18,WT 18hrs,2
+WT 18hrs,S19,WT,no,18,S19,WT 18hrs,3
+WT 18hrs,S20,WT,no,18,S20,WT 18hrs,4
+WT 6hrs,S1,WT,no,6,S1,WT 6hrs,1
+WT 6hrs,S2,WT,no,6,S2,WT 6hrs,2
+WT 6hrs,S3,WT,no,6,S3,WT 6hrs,3
+WT 6hrs,S4,WT,no,6,S4,WT 6hrs,4
+WT Tu 18hrs,S21,WT,Tu,18,S21,WT Tu 18hrs,1
+WT Tu 18hrs,S22,WT,Tu,18,S22,WT Tu 18hrs,2
+WT Tu 18hrs,S23,WT,Tu,18,S23,WT Tu 18hrs,3
+WT Tu 18hrs,S24,WT,Tu,18,S24,WT Tu 18hrs,4
+WT Tu 6hrs,S5,WT,Tu,6,S5,WT Tu 6hrs,1
+WT Tu 6hrs,S6,WT,Tu,6,S6,WT Tu 6hrs,2
+WT Tu 6hrs,S7,WT,Tu,6,S7,WT Tu 6hrs,3
+WT Tu 6hrs,S8,WT,Tu,6,S8,WT Tu 6hrs,4
