@@ -6,7 +6,7 @@ Ube2j2 can be installed in R using the following commands:
 ````{r}
     #install dependencies
     install.packages(c("WGCNA", "reshape2", "fastcluster", "dynamicTreeCut", 
-        "flashClust", "plyr", "ggplot2", "gridExtra", "ggdendro", "emmeans"), 
+        "flashClust", "plyr", "ggplot2", "gridExtra", "ggdendro", "emmeans", "stringr"), 
         dependencies = TRUE)
 
     #install Ube2j2
