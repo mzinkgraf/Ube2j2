@@ -15,4 +15,6 @@ Ube2j2 can be installed in R using the following commands:
     
 ````
 
-The R script containing the analysis can be found in R/Ube2j2_analysis.R and supporting files are contained in the Data folder.
+The R script containing the analysis can be found in R/Ube2j2_analysis.R and supporting files are contained in the 'Data/' folder.
+
+Plots of individual genes and how they respond to experimental treatments can be found in 'Data/plots/'
