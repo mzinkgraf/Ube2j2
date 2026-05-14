@@ -350,7 +350,7 @@ lapply(seq_along(GOresults_CC), function(i){
 
 #### DEG analysis ####
 
-sample_table<-read.csv("sample_info.csv")
+sample_table<-read.csv("Data/sample_info.csv")
 row.names(sample_table)<-sample_table$sample
 lib_names<-row.names(sample_table)
 
@@ -528,9 +528,25 @@ View(magenta_hub_GO$ALL@result)
 #### Add gene plots ####
 require(ggplot2); require(stringr)
 
+# load metadata
+sample_table<-read.csv("Data/sample_info.csv")
+row.names(sample_table)<-sample_table$sample
+lib_names<-row.names(sample_table)
+
+  sample_table$genotype[which(sample_table$genotype=="C6")]="Ube2j2 KO"
+  sample_table$drug[which(sample_table$drug=="no")]="Ctrl"
+  
+  sample_table$genotype<-factor(sample_table$genotype, levels=c("WT", "Ube2j2 KO"))
+  sample_table$drug<-factor(sample_table[lib_names,"drug"], levels=c("Ctrl","Tu"))
+  sample_table$time<-factor(sample_table[lib_names,"time"], levels=c("6", "18"))
+  sample_table$group<-factor(paste0(sample_table$time, " ", sample_table$drug), levels=c("6 Ctrl", "18 Ctrl", "6 Tu", "18 Tu"))
+
 #scale data
 data<-read.table("Data/processed_minprob.tsv", sep="\t", header=T, row.names=1)
-data.scale<-cbind(data[,1:2],scale(data[,-c(1:2)]))
+row.names(data)<-data$sample
+data.scale<-merge(sample_table[,c(3,1)], scale(data[,-c(1:2)]), by.x="row.names", by.y="row.names")
+row.names(data.scale)<-data.scale$Row.names
+data.scale<-data.scale[,-1]
 
 #load module data
 gene_modules<-read.table("Data/Protein_modules.txt", sep="\t", header=T)
@@ -540,11 +556,15 @@ PlotGeneExp<-function(gene="COPA.P53621", data=data.scale, modules=gene_modules)
   ind<-grep(gene, names(data))
   mod<-modules[which(modules$gene==gene),2]
   
-  tmp<-data[,c(1,ind)]
-  tmp[,1]<-factor(tmp[,1], levels=c("WT 6hrs","WT 18hrs","WT Tu 6hrs", "WT Tu 18hrs","C6 6hrs","C6 18hrs","C6 Tu 6hrs","C6 Tu 18hrs"))
-  tmp[,2]<-as.numeric(tmp[,2])
-  return(ggplot(tmp, aes(x=group, y=tmp[,2])) + geom_boxplot()+ ylab(paste0(gene," Expression")) + scale_x_discrete(labels = function(x) str_wrap(x, width = 2)) + xlab("Treatments") + ggtitle(paste0(gene," occurs in the ", mod, " module")))
+  tmp<-data[,c(1:2,ind)]
+  #tmp[,1]<-factor(tmp[,1], levels=c("WT 6hrs","WT 18hrs","WT Tu 6hrs", "WT Tu 18hrs","C6 6hrs","C6 18hrs","C6 Tu 6hrs","C6 Tu 18hrs"))
+  #tmp[,2]<-as.numeric(tmp[,2])
+
+  return(ggplot(tmp, aes(x=tmp[,2], y=tmp[,3], color=tmp[,1])) + geom_boxplot()+ ylab(paste0(gene," Expression")) + scale_x_discrete(labels = function(x) str_wrap(x, width = 2)) + xlab("Treatments") + ggtitle(paste0(gene," occurs in the ", mod, " module")) + facet_grid(.~tmp[,1]) + scale_color_manual(values = c("#7ac4e3", "#9f3b75")) + theme_bw() + guides(color = "none")) 
 }
+
+#ube2j2 color #9f3b75
+#WT color #7ac4e3
 
 # plot individual gene
 PlotGeneExp(gene="COPA.P53621", data=data.scale, modules = gene_modules)
@@ -566,7 +586,6 @@ data.scale<-cbind(data[,1:2],scale(data[,-c(1:2)]))
 # load module data
 load("Data/networkConstruction.RData")
 gene_modules<-read.table("Data/Protein_modules.txt", sep="\t", header=T)
-
 
 PlotModule<-function(mod="blue", data=data.scale, gene_m=gene_modules, merMEs=MEs) 
 {
