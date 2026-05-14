@@ -524,3 +524,81 @@ magenta_hub_GO$ALL<-       enrichGO(gene          = magenta_hub_uniprot,
 View(magenta_hub_GO$ALL@result)
 #save(magenta_hub_GO ,file="Magenta_hub_GO_results.rdata")
 #write.table(magenta_hub_GO$ALL@result, file="Magenta_HubGenes_GO.txt", sep="\t")
+
+#### Add gene plots ####
+require(ggplot2); require(stringr)
+
+#scale data
+data<-read.table("Data/processed_minprob.tsv", sep="\t", header=T, row.names=1)
+data.scale<-cbind(data[,1:2],scale(data[,-c(1:2)]))
+
+PlotGeneExp<-function(gene="Q9NUJ1", data=data.scale)
+{
+  ind<-grep(gene, names(data))
+  
+  tmp<-data[,c(1,ind)]
+  tmp[,1]<-factor(tmp[,1], levels=c("WT 6hrs","WT 18hrs","WT Tu 6hrs", "WT Tu 18hrs","C6 6hrs","C6 18hrs","C6 Tu 6hrs","C6 Tu 18hrs"))
+  tmp[,2]<-as.numeric(tmp[,2])
+  return(ggplot(tmp, aes(x=group, y=tmp[,2])) + geom_boxplot()+ ylab(paste0(gene," Expression")) + scale_x_discrete(labels = function(x) str_wrap(x, width = 2)) + xlab("Treatments") )
+}
+
+# plot individual gene
+PlotGeneExp(gene="Q9NUJ1", data=data.scale)
+
+# plot all genes and save to folder
+for(i in names(data.scale)[-c(1:2)])
+{
+  G<-PlotGeneExp(i,data.scale)
+  ggsave(file=paste0("plots/",i,".pdf"))
+}
+
+#### Add module plots ####
+require(ggplot2); require(reshape2); require(plyr); require(stringr)
+
+#scale data
+data<-read.table("Data/processed_minprob.tsv", sep="\t", header=T, row.names=1)
+data.scale<-cbind(data[,1:2],scale(data[,-c(1:2)]))
+
+# load module data
+load("Data/networkConstruction.RData")
+gene_modules<-read.table("Data/Protein_modules.txt", sep="\t", header=T)
+
+
+PlotModule<-function(mod="blue", data=data.scale, gene_m=gene_modules, merMEs=MEs) 
+{
+  indx<-which(gene_m[,2]==mod)
+  
+  module_exp<-data[,c(1,2,which(names(data) %in% gene_m$gene[indx]))]
+  
+  mod_ME<-data.frame(merMEs[,which(names(merMEs)==paste0("ME",mod))])
+  names(mod_ME)<-paste0("ME",mod)
+  row.names(mod_ME)<-row.names(merMEs)
+  
+  mod.cor<-cor(module_exp[,-c(1:2)], mod_ME)
+  neg_cor<-row.names(mod.cor)[which(mod.cor<0)]
+  
+  mod_exp_long<-melt(module_exp, id.vars=c("group", "sample"), variable.name = "gene", value.name = "exp")
+  
+  mod_exp_long$MEcorrelation<-"positive"
+  
+  #invert the negative correlations genes
+  mod_exp_long[which(mod_exp_long$gene %in% neg_cor),"exp"]<--mod_exp_long[which(mod_exp_long$gene %in% neg_cor),"exp"]
+  mod_exp_long[which(mod_exp_long$gene %in% neg_cor),"MEcorrelation"]<-"negative"
+  
+  mod_exp_long[,1]<-factor(mod_exp_long[,1], levels=c( "WT 6hrs","WT 18hrs","WT Tu 6hrs", "WT Tu 18hrs", "C6 6hrs","C6 18hrs","C6 Tu 6hrs","C6 Tu 18hrs"))
+  
+  mod_exp_long_mean<-ddply(mod_exp_long, .(group, gene, MEcorrelation), summarize, mean=mean(exp))
+  mod_exp_long_mean$genotype<-sub("(\\w{2}) .+", "\\1",mod_exp_long_mean$group,  perl=T)
+  mod_exp_long_mean$treatment<-sub("\\w{2} (.+)", "\\1",mod_exp_long_mean$group,  perl=T)
+  
+  
+  modAV<-ddply(mod_exp_long, .(group), summarize, mean=mean(exp))
+  modAV$gene<-paste0("ME",mod)
+  modAV$genotype<-sub("(\\w{2}) .+", "\\1",modAV$group,  perl=T)
+  modAV$treatment<-sub("\\w{2} (.+)", "\\1",modAV$group,  perl=T)
+  
+  p<-ggplot(mod_exp_long_mean, aes(x=treatment, y=mean, group=gene, color=MEcorrelation)) + geom_line(alpha=.2)+ ylab(paste0(mod," Expression")) + theme_bw() +  geom_line(data=modAV, aes(x=treatment, group=gene, y=mean), color="black") + facet_grid(genotype~.)
+  return(p)
+}
+
+PlotModule()
