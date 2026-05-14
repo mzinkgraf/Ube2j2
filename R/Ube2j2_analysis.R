@@ -532,24 +532,28 @@ require(ggplot2); require(stringr)
 data<-read.table("Data/processed_minprob.tsv", sep="\t", header=T, row.names=1)
 data.scale<-cbind(data[,1:2],scale(data[,-c(1:2)]))
 
-PlotGeneExp<-function(gene="Q9NUJ1", data=data.scale)
+#load module data
+gene_modules<-read.table("Data/Protein_modules.txt", sep="\t", header=T)
+
+PlotGeneExp<-function(gene="COPA.P53621", data=data.scale, modules=gene_modules)
 {
   ind<-grep(gene, names(data))
+  mod<-modules[which(modules$gene==gene),2]
   
   tmp<-data[,c(1,ind)]
   tmp[,1]<-factor(tmp[,1], levels=c("WT 6hrs","WT 18hrs","WT Tu 6hrs", "WT Tu 18hrs","C6 6hrs","C6 18hrs","C6 Tu 6hrs","C6 Tu 18hrs"))
   tmp[,2]<-as.numeric(tmp[,2])
-  return(ggplot(tmp, aes(x=group, y=tmp[,2])) + geom_boxplot()+ ylab(paste0(gene," Expression")) + scale_x_discrete(labels = function(x) str_wrap(x, width = 2)) + xlab("Treatments") )
+  return(ggplot(tmp, aes(x=group, y=tmp[,2])) + geom_boxplot()+ ylab(paste0(gene," Expression")) + scale_x_discrete(labels = function(x) str_wrap(x, width = 2)) + xlab("Treatments") + ggtitle(paste0(gene," occurs in the ", mod, " module")))
 }
 
 # plot individual gene
-PlotGeneExp(gene="Q9NUJ1", data=data.scale)
+PlotGeneExp(gene="COPA.P53621", data=data.scale, modules = gene_modules)
 
 # plot all genes and save to folder
 for(i in names(data.scale)[-c(1:2)])
 {
   G<-PlotGeneExp(i,data.scale)
-  ggsave(file=paste0("plots/",i,".pdf"))
+  ggsave(file=paste0("Data/plots/",i,".pdf"))
 }
 
 #### Add module plots ####
