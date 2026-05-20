@@ -21,4 +21,5 @@ Plots of individual genes and how they respond to experimental treatments can be
 
 > [!IMPORTANT]
 > Note on plots: Github only shows the first 1000 proteins in the folder and others can be obtained using the `Go to file` search box in upper left with the uniprot name.
-![Location of Go to file search bar](Data/Go2file.png)
+<br/><br/>
+<img src="Data/Go2file.png"  width="50%">
