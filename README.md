@@ -1,8 +1,7 @@
 # Ube2j2
 This package implements the analysis of mass spectrometry data from Ube2j2 deficient cell lines using a WGCNA network approach.
 
-[![DOI](https://zenodo.org/badge/1194080350.svg)](https://doi.org/10.5281/zenodo.20529475)
-
+<a href="https://doi.org/10.5281/zenodo.20529475"><img src="https://zenodo.org/badge/1194080350.svg" alt="DOI"></a>
 
 Ube2j2 can be installed in R using the following commands:
 
